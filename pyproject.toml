@@ -1,0 +1,20 @@
+[project]
+name = "ghostfolio"
+authors = [
+    {name = "Marcin Szymanski", email = "ms32035@gmail.com"},
+]
+description = "Python API client for Ghostfolio"
+
+requires-python = ">=3.10"
+
+dependencies = [
+    "requests"
+]
+
+version = "0.1.0"
+
+[project.urls]
+Homepage = "https://github.com/ms32035/ghostfolio-py"
+
+[tool.setuptools.packages.find]
+["ghostfolio*"]
