@@ -97,3 +97,6 @@ class Ghostfolio:
     def market_data(self, data_source: str, symbol: str):
         """Get market data for a symbol from a data source."""
         return self._get(f"admin/market-data/{data_source}/{symbol}")
+
+    def __hash__(self) -> int:
+        return hash((self.token, self.host))
