@@ -71,6 +71,7 @@ class Ghostfolio:
         return self._get("portfolio/positions", params={"range": date_range})
 
     def import_transactions(self, data: dict):
+        """Import transactions."""
         self._post("import", data)
 
     def details(self) -> dict:
@@ -78,11 +79,13 @@ class Ghostfolio:
         return self._get("portfolio/details")
 
     def investments(self, group_by: str = "month", date_range: str = "max") -> dict:
+        """Get investments grouped by period."""
         return self._get(
-            "investments", params={"range": date_range, "groupBy": group_by}
+            "portfolio/investments", params={"range": date_range, "groupBy": group_by}
         )
 
     def dividends(self, group_by: str = "month", date_range: str = "max") -> dict:
+        """Get dividends grouped by period."""
         return self._get(
             "portfolio/dividends", params={"range": date_range, "groupBy": group_by}
         )
@@ -100,3 +103,6 @@ class Ghostfolio:
 
     def __hash__(self) -> int:
         return hash((self.token, self.host))
+
+    def __repr__(self):
+        return f"Ghostfolio(host={self.host})"
