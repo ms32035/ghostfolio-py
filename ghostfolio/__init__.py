@@ -70,6 +70,10 @@ class Ghostfolio:
     def positions(self, date_range: str = "max") -> dict:
         return self._get("portfolio/positions", params={"range": date_range})
 
+    def position(self, data_source: str, symbol: str):
+        """Get position for a symbol from a data source."""
+        return self._get(f"portfolio/position/{data_source}/{symbol}")
+
     def import_transactions(self, data: dict):
         """Import transactions."""
         self._post("import", data)
