@@ -67,8 +67,8 @@ class Ghostfolio:
             "portfolio/performance", params={"range": date_range}, api_version="v2"
         )
 
-    def positions(self, date_range: str = "max") -> dict:
-        return self._get("portfolio/positions", params={"range": date_range})
+    def holdings(self, date_range: str = "max") -> dict:
+        return self._get("portfolio/holdings", params={"range": date_range})
 
     def position(self, data_source: str, symbol: str):
         """Get position for a symbol from a data source."""
