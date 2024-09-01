@@ -36,12 +36,12 @@ class Ghostfolio:
             )
         )
 
-    def _post(self, endpoint: str, data=None, api_version: str = "v1"):
+    def post(self, endpoint: str, data=None, api_version: str = "v1", object_id: str = None):
         self._refresh_jwt_token()
 
         return self._process_response(
             requests.post(
-                f"{self.host}/api/{api_version}/{endpoint}/",
+                f"{self.host}/api/{api_version}/{endpoint}/" + (object_id + "/" if object_id else ""),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 json=data,
             )
@@ -76,7 +76,7 @@ class Ghostfolio:
 
     def import_transactions(self, data: dict):
         """Import transactions."""
-        self._post("import", data)
+        self.post("import", data)
 
     def details(self) -> dict:
         """Get all details, including accounts, positions, and summary."""

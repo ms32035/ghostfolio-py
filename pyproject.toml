@@ -4,6 +4,7 @@ authors = [
     {name = "Marcin Szymanski", email = "ms32035@gmail.com"},
 ]
 description = "Python API client for Ghostfolio"
+readme = "README.md"
 
 requires-python = ">=3.10"
 
@@ -11,7 +12,7 @@ dependencies = [
     "requests"
 ]
 
-version = "0.4.1"
+version = "0.5.0"
 
 [project.urls]
 Homepage = "https://github.com/ms32035/ghostfolio-py"

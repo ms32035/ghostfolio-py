@@ -18,3 +18,11 @@ from ghostfolio import Ghostfolio
 client = Ghostfolio(token="your_token")
 
 ```
+
+Or if you want to connect to your self-hosted Ghostfolio instance:
+
+```python
+from ghostfolio import Ghostfolio
+
+client = Ghostfolio(token="your_token", host="https://your-ghostfolio-instance.com")
+```
