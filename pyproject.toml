@@ -17,5 +17,10 @@ version = "0.6.0"
 [project.urls]
 Homepage = "https://github.com/ms32035/ghostfolio-py"
 
-[tool.setuptools.packages.find]
-["ghostfolio*"]
+[project.scripts]
+generate-docs = "scripts.generate_docs:main"
+
+[dependency-groups]
+dev = [
+    "pdoc3>=0.11.6",
+]
