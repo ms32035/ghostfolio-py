@@ -26,3 +26,9 @@ from ghostfolio import Ghostfolio
 
 client = Ghostfolio(token="your_token", host="https://your-ghostfolio-instance.com")
 ```
+
+## Generate Documentation
+
+```shell
+pdoc --html --output-dir docs ghostfolio --force
+```
