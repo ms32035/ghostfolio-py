@@ -8,11 +8,14 @@ from requests.exceptions import HTTPError
 class Ghostfolio:
     """Ghostfolio API client."""
 
-    def __init__(self, token: str, host: str = "https://ghostfol.io/"):
+    def __init__(
+        self, token: str, host: str = "https://ghostfol.io/", verify_ssl: bool = True
+    ):
         self.host = host
-        self.token = token
+        self._token = token
         self._jwt_token: str | None = None
         self._jwt_token_expiry: datetime | None = None
+        self._verify_ssl = verify_ssl
 
     def _url(self, endpoint: str, object_id: str = None, api_version: str = "v1"):
         return f"{self.host}/api/{api_version}/{endpoint}/" + (
@@ -25,7 +28,9 @@ class Ghostfolio:
 
         self._jwt_token = self._process_response(
             requests.post(
-                f"{self.host}/api/v1/auth/anonymous/", {"accessToken": self.token}
+                f"{self.host}/api/v1/auth/anonymous/",
+                {"accessToken": self._token},
+                verify=self._verify_ssl,
             )
         )["authToken"]
         self._jwt_token_expiry = datetime.now() + timedelta(days=30)
@@ -38,6 +43,7 @@ class Ghostfolio:
                 self._url(endpoint, api_version=api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 params=params,
+                verify=self._verify_ssl,
             )
         )
 
@@ -51,6 +57,7 @@ class Ghostfolio:
                 self._url(endpoint, object_id, api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 json=data,
+                verify=self._verify_ssl,
             )
         )
 
@@ -64,6 +71,7 @@ class Ghostfolio:
                 self._url(endpoint, object_id, api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 json=data,
+                verify=self._verify_ssl,
             )
         )
 
@@ -126,7 +134,7 @@ class Ghostfolio:
         return self.get(f"admin/market-data/{data_source}/{symbol}")
 
     def __hash__(self) -> int:
-        return hash((self.token, self.host))
+        return hash((self._token, self.host))
 
     def __repr__(self):
         return f"Ghostfolio(host={self.host})"
