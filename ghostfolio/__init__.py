@@ -37,18 +37,22 @@ class Ghostfolio:
         token (str): Your Ghostfolio access token
     """
 
-    def __init__(self, token: str, host: str = "https://ghostfol.io/"):
+    def __init__(
+        self, token: str, host: str = "https://ghostfol.io/", verify_ssl: bool = True
+    ):
         """
         Initialize the Ghostfolio client.
         
         Args:
             token (str): Your Ghostfolio access token
             host (str): The Ghostfolio instance URL
-        """
+            verify_ssl (bool): Whether to verify SSL certificates            
+        """    
         self.host = host
-        self.token = token
-        self._jwt_token: Optional[str] = None
-        self._jwt_token_expiry: Optional[datetime] = None
+        self._token = token
+        self._jwt_token: str | None = None
+        self._jwt_token_expiry: datetime | None = None
+        self._verify_ssl = verify_ssl
 
     def _url(self, endpoint: str, object_id: Optional[str] = None, api_version: str = "v1") -> str:
         """
@@ -78,7 +82,9 @@ class Ghostfolio:
 
         self._jwt_token = self._process_response(
             requests.post(
-                f"{self.host}/api/v1/auth/anonymous/", {"accessToken": self.token}
+                f"{self.host}/api/v1/auth/anonymous/",
+                {"accessToken": self._token},
+                verify=self._verify_ssl,
             )
         )["authToken"]
         self._jwt_token_expiry = datetime.now() + timedelta(days=30)
@@ -105,6 +111,7 @@ class Ghostfolio:
                 self._url(endpoint, api_version=api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 params=params,
+                verify=self._verify_ssl,
             )
         )
 
@@ -133,6 +140,7 @@ class Ghostfolio:
                 self._url(endpoint, object_id, api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 json=data,
+                verify=self._verify_ssl,
             )
         )
 
@@ -161,6 +169,7 @@ class Ghostfolio:
                 self._url(endpoint, object_id, api_version),
                 headers={"Authorization": f"Bearer {self._jwt_token}"},
                 json=data,
+                verify=self._verify_ssl,
             )
         )
 
@@ -535,7 +544,7 @@ class Ghostfolio:
         Returns:
             int: Hash value based on token and host combination
         """
-        return hash((self.token, self.host))
+        return hash((self._token, self.host))
 
     def __repr__(self) -> str:
         """
