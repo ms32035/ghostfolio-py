@@ -311,11 +311,11 @@ class Ghostfolio:
         """
         return self.get("portfolio/holdings", params={"range": date_range})
 
-    def position(self, data_source: str, symbol: str) -> dict[str, Any]:
+    def holding(self, data_source: str, symbol: str) -> dict[str, Any]:
         """
-        Get position details for a specific symbol from a data source.
+        Get holding details for a specific symbol from a data source.
 
-        Retrieves detailed information about a specific position including
+        Retrieves detailed information about a specific holding including
         current value, quantity, performance, and market data.
 
         Args:
@@ -323,7 +323,7 @@ class Ghostfolio:
             symbol (str): Symbol/ticker of the asset
 
         Returns:
-            Dict[str, Any]: Dictionary containing position details including:
+            Dict[str, Any]: Dictionary containing holding details including:
                 - symbol: Asset symbol
                 - quantity: Current quantity held
                 - value: Current market value
@@ -332,14 +332,14 @@ class Ghostfolio:
 
         Example:
             ```python
-            # Get position for Microsoft stock
-            msft_position = client.position("YAHOO", "MSFT")
+            # Get holding for Microsoft stock
+            msft_holding = client.holding("YAHOO", "MSFT")
 
-            # Get position for Bitcoin
-            btc_position = client.position("COINGECKO", "bitcoin")
+            # Get holding for Bitcoin
+            btc_holding = client.holding("COINGECKO", "bitcoin")
             ```
         """
-        return self.get(f"portfolio/position/{data_source}/{symbol}")
+        return self.get(f"portfolio/holding/{data_source}/{symbol}")
 
     def import_transactions(self, data: dict[str, Any]) -> None:
         """
