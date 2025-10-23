@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import requests
 from requests.exceptions import HTTPError
@@ -37,9 +37,7 @@ class Ghostfolio:
         token (str): Your Ghostfolio access token
     """
 
-    def __init__(
-        self, token: str, host: str = "https://ghostfol.io/", verify_ssl: bool = True
-    ):
+    def __init__(self, token: str, host: str = "https://ghostfol.io/", verify_ssl: bool = True):
         """
         Initialize the Ghostfolio client.
 
@@ -54,9 +52,7 @@ class Ghostfolio:
         self._jwt_token_expiry: datetime | None = None
         self._verify_ssl = verify_ssl
 
-    def _url(
-        self, endpoint: str, object_id: str | None = None, api_version: str = "v1"
-    ) -> str:
+    def _url(self, endpoint: str, object_id: str | None = None, api_version: str = "v1") -> str:
         """
         Build API URL for given endpoint.
 
@@ -68,9 +64,7 @@ class Ghostfolio:
         Returns:
             str: Complete API URL
         """
-        return f"{self.host}/api/{api_version}/{endpoint}/" + (
-            object_id + "/" if object_id else ""
-        )
+        return f"{self.host}/api/{api_version}/{endpoint}/" + (object_id + "/" if object_id else "")
 
     def _refresh_jwt_token(self) -> None:
         """
@@ -102,11 +96,11 @@ class Ghostfolio:
 
         Args:
             endpoint (str): API endpoint path
-            params (Optional[Dict[str, Any]]): Query parameters to include in the request
+            params (Optional[dict[str, Any]]): Query parameters to include in the request
             api_version (str): API version (default: "v1")
 
         Returns:
-            Dict[str, Any]: API response as dictionary
+            dict[str, Any]: API response as dictionary
 
         Raises:
             HTTPError: If the request fails or returns an error status code
@@ -139,7 +133,7 @@ class Ghostfolio:
             object_id (Optional[str]): Optional object ID for the endpoint
 
         Returns:
-            Dict[str, Any]: API response as dictionary
+            dict[str, Any]: API response as dictionary
 
         Raises:
             HTTPError: If the request fails or returns an error status code
@@ -270,9 +264,7 @@ class Ghostfolio:
             max_perf = client.performance()
             ```
         """
-        return self.get(
-            "portfolio/performance", params={"range": date_range}, api_version="v2"
-        )
+        return self.get("portfolio/performance", params={"range": date_range}, api_version="v2")
 
     def holdings(self, date_range: str = "max") -> dict[str, Any]:
         """
@@ -399,9 +391,7 @@ class Ghostfolio:
         """
         return self.get("portfolio/details")
 
-    def investments(
-        self, group_by: str = "month", date_range: str = "max"
-    ) -> dict[str, Any]:
+    def investments(self, group_by: str = "month", date_range: str = "max") -> dict[str, Any]:
         """
         Get investment data grouped by time period.
 
@@ -437,13 +427,9 @@ class Ghostfolio:
             quarterly = client.investments(group_by="quarter")
             ```
         """
-        return self.get(
-            "portfolio/investments", params={"range": date_range, "groupBy": group_by}
-        )
+        return self.get("portfolio/investments", params={"range": date_range, "groupBy": group_by})
 
-    def dividends(
-        self, group_by: str = "month", date_range: str = "max"
-    ) -> dict[str, Any]:
+    def dividends(self, group_by: str = "month", date_range: str = "max") -> dict[str, Any]:
         """
         Get dividend data grouped by time period.
 
@@ -479,9 +465,7 @@ class Ghostfolio:
             quarterly = client.dividends(group_by="quarter")
             ```
         """
-        return self.get(
-            "portfolio/dividends", params={"range": date_range, "groupBy": group_by}
-        )
+        return self.get("portfolio/dividends", params={"range": date_range, "groupBy": group_by})
 
     def accounts(self) -> dict[str, Any]:
         """

@@ -6,10 +6,14 @@ Usage:
     python scripts/generate_docs.py
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path
+
+try:
+    import webbrowser
+except ImportError:
+    webbrowser = None
 
 
 def main():
@@ -25,7 +29,7 @@ def main():
 
     try:
         # Generate HTML documentation
-        result = subprocess.run(
+        subprocess.run(
             [
                 sys.executable,
                 "-m",
@@ -62,12 +66,10 @@ def main():
         print("✅ Index redirect created!")
 
         # Open documentation in browser (optional)
-        try:
-            import webbrowser
-
+        if webbrowser:
             webbrowser.open(f"file://{docs_dir}/ghostfolio/index.html")
             print("🌐 Opening documentation in browser...")
-        except Exception:
+        else:
             print("💡 To view documentation, open: docs/ghostfolio/index.html")
 
     except subprocess.CalledProcessError as e:

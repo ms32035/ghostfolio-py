@@ -5,18 +5,9 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.2
     hooks:
-      - id: pyupgrade
-        args: [--py310-plus]
-
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
-
-  - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
-    hooks:
-      - id: isort
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
