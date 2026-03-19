@@ -46,7 +46,7 @@ class Ghostfolio:
             host (str): The Ghostfolio instance URL
             verify_ssl (bool): Whether to verify SSL certificates
         """
-        self.host = host
+        self.host = host.rstrip("/")
         self._token = token
         self._jwt_token: str | None = None
         self._jwt_token_expiry: datetime | None = None
@@ -73,7 +73,7 @@ class Ghostfolio:
         This method handles the authentication flow by obtaining a JWT token
         from the Ghostfolio API using the provided access token.
         """
-        if self._jwt_token is not None and self._jwt_token_expiry < datetime.now():
+        if self._jwt_token is not None and self._jwt_token_expiry > datetime.now():
             return
 
         self._jwt_token = self._process_response(
@@ -128,9 +128,9 @@ class Ghostfolio:
 
         Args:
             endpoint (str): API endpoint path
-            data (Optional[Dict[str, Any]]): Request body data to send
+            data (dict[str, Any] | None): Request body data to send
             api_version (str): API version (default: "v1")
-            object_id (Optional[str]): Optional object ID for the endpoint
+            object_id (str | None): Optional object ID for the endpoint
 
         Returns:
             dict[str, Any]: API response as dictionary
@@ -161,12 +161,12 @@ class Ghostfolio:
 
         Args:
             endpoint (str): API endpoint path
-            data (Optional[Dict[str, Any]]): Request body data to send
+            data (dict[str, Any] | None): Request body data to send
             api_version (str): API version (default: "v1")
-            object_id (Optional[str]): Optional object ID for the endpoint
+            object_id (str | None): Optional object ID for the endpoint
 
         Returns:
-            Dict[str, Any]: API response as dictionary
+            dict[str, Any]: API response as dictionary
 
         Raises:
             HTTPError: If the request fails or returns an error status code
@@ -191,7 +191,7 @@ class Ghostfolio:
             resp (requests.Response): HTTP response object from requests library
 
         Returns:
-            Dict[str, Any]: JSON response data as dictionary
+            dict[str, Any]: JSON response data as dictionary
 
         Raises:
             HTTPError: If the request failed or returned an error status code
@@ -212,10 +212,10 @@ class Ghostfolio:
         filtered by a specific account.
 
         Args:
-            account_id (Optional[str]): Optional account ID to filter orders by specific account
+            account_id (str | None): Optional account ID to filter orders by specific account
 
         Returns:
-            Dict[str, Any]: Dictionary containing order data with activities, pagination, etc.
+            dict[str, Any]: Dictionary containing order data with activities, pagination, etc.
 
         Example:
             ```python
@@ -249,7 +249,7 @@ class Ghostfolio:
                 - "max": Maximum available period
 
         Returns:
-            Dict[str, Any]: Dictionary containing performance metrics including:
+            dict[str, Any]: Dictionary containing performance metrics including:
                 - returns: Portfolio returns data
                 - benchmarks: Benchmark comparison data
                 - performance: Detailed performance metrics
@@ -286,7 +286,7 @@ class Ghostfolio:
                 - "max": Maximum available period
 
         Returns:
-            Dict[str, Any]: Dictionary containing holdings data including:
+            dict[str, Any]: Dictionary containing holdings data including:
                 - holdings: List of current positions
                 - accounts: Account breakdown
                 - allocations: Asset allocation data
@@ -315,7 +315,7 @@ class Ghostfolio:
             symbol (str): Symbol/ticker of the asset
 
         Returns:
-            Dict[str, Any]: Dictionary containing holding details including:
+            dict[str, Any]: Dictionary containing holding details including:
                 - symbol: Asset symbol
                 - quantity: Current quantity held
                 - value: Current market value
@@ -333,7 +333,7 @@ class Ghostfolio:
         """
         return self.get(f"portfolio/holding/{data_source}/{symbol}")
 
-    def import_transactions(self, data: dict[str, Any]) -> None:
+    def import_transactions(self, data: dict[str, Any]) -> dict[str, Any]:
         """
         Import transactions into your portfolio.
 
@@ -342,8 +342,11 @@ class Ghostfolio:
         transactions from other platforms.
 
         Args:
-            data (Dict[str, Any]): Transaction data in the format expected by Ghostfolio API.
+            data (dict[str, Any]): Transaction data in the format expected by Ghostfolio API.
                 Should contain an "activities" list with transaction objects.
+
+        Returns:
+            dict[str, Any]: API response as dictionary
 
         Raises:
             HTTPError: If the import fails or returns an error status code
@@ -364,10 +367,10 @@ class Ghostfolio:
                     }
                 ]
             }
-            client.import_transactions(transactions)
+            result = client.import_transactions(transactions)
             ```
         """
-        self.post("import", data)
+        return self.post("import", data)
 
     def details(self) -> dict[str, Any]:
         """
@@ -377,7 +380,7 @@ class Ghostfolio:
         information, current positions, performance summary, and portfolio metrics.
 
         Returns:
-            Dict[str, Any]: Dictionary containing complete portfolio information including:
+            dict[str, Any]: Dictionary containing complete portfolio information including:
                 - accounts: List of all accounts
                 - positions: Current portfolio positions
                 - summary: Portfolio summary metrics
@@ -412,7 +415,7 @@ class Ghostfolio:
                 - "max": Maximum available period
 
         Returns:
-            Dict[str, Any]: Dictionary containing investment data grouped by the specified period including:
+            dict[str, Any]: Dictionary containing investment data grouped by the specified period including:
                 - investments: List of investment periods with data
                 - total: Total investment amount
                 - range: The date range used
@@ -450,7 +453,7 @@ class Ghostfolio:
                 - "max": Maximum available period
 
         Returns:
-            Dict[str, Any]: Dictionary containing dividend data grouped by the specified period including:
+            dict[str, Any]: Dictionary containing dividend data grouped by the specified period including:
                 - dividends: List of dividend periods with data
                 - total: Total dividend income
                 - range: The date range used
@@ -475,7 +478,7 @@ class Ghostfolio:
         types, balances, and account-specific information.
 
         Returns:
-            Dict[str, Any]: Dictionary containing account information including:
+            dict[str, Any]: Dictionary containing account information including:
                 - accounts: List of all accounts
                 - total: Total portfolio value across all accounts
                 - currency: Base currency for the portfolio
@@ -497,7 +500,7 @@ class Ghostfolio:
         This is useful for understanding what market data is available.
 
         Returns:
-            Dict[str, Any]: Dictionary containing market data overview including:
+            dict[str, Any]: Dictionary containing market data overview including:
                 - dataSources: List of available data sources
                 - symbols: List of symbols with market data
                 - lastUpdate: Last update timestamp
@@ -522,7 +525,7 @@ class Ghostfolio:
             symbol (str): Symbol/ticker of the asset
 
         Returns:
-            Dict[str, Any]: Dictionary containing market data for the specified symbol including:
+            dict[str, Any]: Dictionary containing market data for the specified symbol including:
                 - symbol: Asset symbol
                 - price: Current market price
                 - currency: Price currency
