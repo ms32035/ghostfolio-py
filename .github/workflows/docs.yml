@@ -40,7 +40,7 @@ jobs:
           echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=ghostfolio/index.html"></head><body><p>Redirecting to <a href="ghostfolio/index.html">documentation</a>...</p></body></html>' > docs/index.html
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs
 
