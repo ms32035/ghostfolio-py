@@ -204,30 +204,30 @@ class Ghostfolio:
 
         return resp.json()
 
-    def orders(self, account_id: str | None = None) -> dict[str, Any]:
+    def activities(self, account_id: str | None = None) -> dict[str, Any]:
         """
-        Get all orders from your portfolio.
+        Get all activities from your portfolio.
 
-        Retrieves a list of all buy/sell orders in your portfolio, optionally
+        Retrieves a list of all buy/sell activities in your portfolio, optionally
         filtered by a specific account.
 
         Args:
-            account_id (str | None): Optional account ID to filter orders by specific account
+            account_id (str | None): Optional account ID to filter activities by specific account
 
         Returns:
-            dict[str, Any]: Dictionary containing order data with activities, pagination, etc.
+            dict[str, Any]: Dictionary containing activity data with activities, pagination, etc.
 
         Example:
             ```python
-            # Get all orders
-            orders = client.orders()
+            # Get all activities
+            activities = client.activities()
 
-            # Get orders for specific account
-            account_orders = client.orders(account_id="account_123")
+            # Get activities for specific account
+            account_activities = client.activities(account_id="account_123")
             ```
         """
         params = {"accounts": account_id} if account_id else None
-        return self.get("order", params=params)
+        return self.get("activities", params=params, api_version="v1")
 
     def performance(self, date_range: str = "max") -> dict[str, Any]:
         """
