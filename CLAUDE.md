@@ -54,7 +54,7 @@ All requests flow through:
 ### API Coverage
 - **Portfolio**: `performance()`, `holdings()`, `holding()`, `details()`, `investments()`, `dividends()`
 - **Transactions**: `orders()`, `import_transactions()`
-- **Accounts/Admin**: `accounts()`, `market_data_admin()`, `market_data()`
+- **Accounts/Admin**: `accounts()`, `market_data_admin()`, `market_data()`, `asset_profiles()`
 
 The `get()`/`post()`/`put()` methods are also public, allowing callers to hit any endpoint not yet wrapped.
 

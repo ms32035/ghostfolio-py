@@ -543,6 +543,68 @@ class Ghostfolio:
         """
         return self.get(f"admin/market-data/{data_source}/{symbol}")
 
+    def asset_profiles(  # noqa: PLR0913
+        self,
+        *,
+        asset_sub_classes: list[str] | None = None,
+        data_source: str | None = None,
+        preset_id: str | None = None,
+        query: str | None = None,
+        skip: int | None = None,
+        sort_column: str | None = None,
+        sort_direction: str | None = None,
+        take: int | None = None,
+    ) -> dict[str, Any]:
+        """
+        Get asset profiles from your Ghostfolio instance.
+
+        Retrieves the asset profiles (symbols with their metadata) known to your
+        Ghostfolio instance, with optional filtering, sorting and pagination.
+        All parameters are optional; without pagination parameters the API
+        returns all asset profiles. Requires admin permissions.
+
+        Args:
+            asset_sub_classes (list[str] | None): Filter by asset sub classes
+                (e.g. ["ETF", "STOCK"])
+            data_source (str | None): Filter by data source (e.g. "YAHOO", "COINGECKO", "MANUAL")
+            preset_id (str | None): Filter by preset. Options include:
+                - "BENCHMARKS"
+                - "CURRENCIES"
+                - "ETF_WITHOUT_COUNTRIES"
+                - "ETF_WITHOUT_SECTORS"
+                - "NO_ACTIVITIES"
+            query (str | None): Free text search query
+            skip (int | None): Number of asset profiles to skip (offset)
+            sort_column (str | None): Column to sort by (e.g. "symbol", "name", "dataSource")
+            sort_direction (str | None): Sort direction ("asc" or "desc")
+            take (int | None): Maximum number of asset profiles to return (page size)
+
+        Returns:
+            dict[str, Any]: Dictionary containing asset profile data including:
+                - assetProfiles: List of asset profiles
+                - count: Total number of asset profiles matching the filters
+
+        Example:
+            ```python
+            # Get the first 50 asset profiles sorted by symbol
+            profiles = client.asset_profiles(skip=0, take=50, sort_column="symbol", sort_direction="asc")
+
+            # Get all ETF asset profiles from Yahoo
+            etfs = client.asset_profiles(asset_sub_classes=["ETF"], data_source="YAHOO")
+            ```
+        """
+        params = {
+            "assetSubClasses": ",".join(asset_sub_classes) if asset_sub_classes else None,
+            "dataSource": data_source,
+            "presetId": preset_id,
+            "query": query,
+            "skip": skip,
+            "sortColumn": sort_column,
+            "sortDirection": sort_direction,
+            "take": take,
+        }
+        return self.get("asset-profiles", params={k: v for k, v in params.items() if v is not None})
+
     def __hash__(self) -> int:
         """
         Return hash based on token and host.
